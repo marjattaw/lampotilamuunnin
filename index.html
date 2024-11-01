@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lämpötilamuunnin</title>
+</head>
+<body>
+    <h1>Lämpötilamuunnin</h1>
+    
+    <label for="conversion">Valitse muunnos:</label>
+    <select id="conversion">
+        <option value="CtoF">Celsius -> Fahrenheit</option>
+        <option value="FtoC">Fahrenheit -> Celsius</option>
+    </select>
+    
+    <br><br> <!-- Rivinvaihto ennen syötekenttää -->
+    
+    <label for="temperature">Syötä lämpötila:</label>
+    <input type="number" id="temperature" placeholder="Anna lämpötila">
+    
+    <button onclick="convertTemperature()">Muunna</button>
+    
+    <br><br> <!-- Rivinvaihto Muunna-napin jälkeen -->
+    
+    <div>
+        <input type="radio" name="decimal" value="1" checked> 1 desimaali<br>
+        <input type="radio" name="decimal" value="2"> 2 desimaalia<br>
+        <input type="radio" name="decimal" value="3"> 3 desimaalia<br>
+    </div>
+    
+    <p id="result"></p>
+    
+    <script>
+        function convertTemperature() {
+            const conversion = document.getElementById("conversion").value;
+            const temperature = parseFloat(document.getElementById("temperature").value);
+            const decimalPlaces = document.querySelector('input[name="decimal"]:checked').value;
+            const resultElement = document.getElementById("result");
+            
+            // Tarkista, että käyttäjä on syöttänyt kelvollisen lämpötilan
+            if (isNaN(temperature)) {
+                resultElement.textContent = "Anna kelvollinen lämpötila.";
+                return;
+            }
+            
+            // Tarkista, ettei lämpötila ole absoluuttista nollapistettä alhaisempi
+            if (conversion === "CtoF" && temperature < -273.15) {
+                resultElement.textContent = "Lämpötila ei voi olla alle -273,15 °C.";
+                return;
+            } else if (conversion === "FtoC" && temperature < -459.67) {
+                resultElement.textContent = "Lämpötila ei voi olla alle -459,67 °F.";
+                return;
+            }
+            
+            // Lämpötilan muunnos
+            let result;
+            if (conversion === "CtoF") {
+                result = (temperature * 9/5) + 32;
+            } else {
+                result = (temperature - 32) * 5/9;
+            }
+            
+            // Pyöristä tulos
+            result = result.toFixed(decimalPlaces);
+            
+            // Näytä tulos
+            resultElement.textContent = `Muunnettu lämpötila: ${result}`;
+        }
+    </script>
+</body>
+</html>
